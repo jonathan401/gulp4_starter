@@ -67,9 +67,8 @@ const liveReload = (done) => {
   done();
 };
 
-const reload = (done) => {
+const reload = () => {
   browserSync.reload();
-  done();
 };
 
 const watchFiles = (done) => {
