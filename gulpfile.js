@@ -19,7 +19,7 @@ const paths = {
 };
 
 // scss to css
-const cssTask = () => {
+const cssTask = (done) => {
   return src(paths.scss, { allowEmpty: true })
     .pipe(sourcemaps.init())
     .pipe(sass().on("error", sass.logError))
@@ -27,9 +27,10 @@ const cssTask = () => {
     .pipe(sourcemaps.write("."))
     .pipe(dest(paths.scssDest))
     .pipe(browserSync.stream());
+  done();
 };
 
-const jsTask = () => {
+const jsTask = (done) => {
   return src(paths.js, { allowEmpty: true })
     .pipe(sourcemaps.init())
     .pipe(
@@ -40,42 +41,49 @@ const jsTask = () => {
     .pipe(uglify())
     .pipe(sourcemaps.write("."))
     .pipe(dest(paths.jsDest));
+  done();
 };
 
 // clean
-const cleanFiles = () => {
+const cleanFiles = (done) => {
   src(paths.dist, { read: false }).pipe(clean());
+  done();
 };
 
 // copy images
-const copyImages = () => {
+const copyImages = (done) => {
   return src("src/assets/images/**/*.{png, jpg, jpeg, gif, svg}", {
     allowEmpty: true,
   }).pipe(dest(paths.imageDest));
+  done();
 };
 
-const liveReload = () => {
+const liveReload = (done) => {
   browserSync.init({
     server: {
       baseDir: "./",
     },
   });
+  done();
 };
 
-const reload = () => {
+const reload = (done) => {
   browserSync.reload();
+  done();
 };
 
-const watchFiles = () => {
+const watchFiles = (done) => {
   watch(paths.scss, series(cssTask, reload));
   watch(paths.js, series(jsTask, reload));
   watch(paths.imageDest, copyImages);
   watch("./*.html").on("change", reload);
+  done();
 };
 
 exports.cleanFiles = cleanFiles;
 
 exports.default = series(
   parallel(copyImages, jsTask, cssTask),
-  parallel(liveReload, watchFiles)
+  liveReload,
+  watchFiles
 );
