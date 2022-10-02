@@ -2,8 +2,6 @@
 
 ##### my personal gulp 4 config setup
 
-setup setting up
-
 ## starting the project
 
 - run `npm install` or `yarn install` to install `devdependencies`
