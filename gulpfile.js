@@ -52,7 +52,7 @@ const cleanFiles = (done) => {
 
 // copy images
 const copyImages = (done) => {
-  return src("src/assets/images/**/*.{png, jpg, jpeg, gif, svg}", {
+  return src("src/assets/images/**/*.{png,jpg,jpeg,gif,svg}", {
     allowEmpty: true,
   }).pipe(dest(paths.imageDest));
   done();
