@@ -52,9 +52,9 @@ const cleanFiles = (done) => {
 
 // copy images
 const copyImages = (done) => {
-  return src("src/assets/images/**/*.{png,jpg,jpeg,gif,svg}", {
-    allowEmpty: true,
-  }).pipe(dest(paths.imageDest));
+  return src("src/assets/images/**/*.{png,jpg,jpeg,gif,svg}").pipe(
+    dest(paths.imageDest)
+  );
   done();
 };
 
@@ -72,8 +72,7 @@ const reload = () => {
 };
 
 const watchFiles = (done) => {
-  watch(paths.scss, series(cssTask, reload));
-  watch(paths.js, series(jsTask, reload));
+  watch([paths.scss, paths.js], parallel(cssTask, jsTask)).on("change", reload);
   watch(paths.imageDest, copyImages);
   watch("./*.html").on("change", reload);
   done();
